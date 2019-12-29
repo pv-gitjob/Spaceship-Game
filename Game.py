@@ -62,17 +62,19 @@ font = pygame.font.SysFont("comicsans", int(round(windowHeight / 15)), True)
 def draw_window():
     window.fill((0, 0, 0))
     player.draw()
-    obstacle.draw()
+    obstacle1.draw()
+    obstacle2.draw()
     score_text = font.render('Score: ' + str(score), 1, (255, 255, 255))
-    name_text = font.render('Praveen Vandeyar', 1, (100, 100, 100))
     window.blit(score_text, (10, 10))
-    window.blit(name_text, (windowWidth - 190, 10))
     pygame.display.update()
 
 
 player = Player()
-speed = 4
-obstacle = Obstacle(speed)
+increment = 0.8
+speed1= 3
+speed2 = 1.5
+obstacle1 = Obstacle(3)
+obstacle2 = Obstacle(1.5)
 run = True
 while run:
     pygame.time.delay(10)
@@ -95,13 +97,22 @@ while run:
     if keys[pygame.K_DOWN] and player.y < windowHeight - player.speed:
         player.move(0, player.speed)
 
-    obstacle.move()
-    if obstacle.x < - obstacle.width:
+    obstacle1.move()
+    if obstacle1.x < - obstacle1.width:
         score += 1
-        speed += 0.5
-        obstacle = Obstacle(speed)
+        speed1 += increment ** 1.1
+        obstacle1 = Obstacle(speed1)
 
-    if player.mask().overlap(obstacle.mask(), (int(round(obstacle.x - player.x)), int(round(obstacle.y - player.y)))):
+    if player.mask().overlap(obstacle1.mask(), (int(round(obstacle1.x - player.x)), int(round(obstacle1.y - player.y)))):
+        run = False
+
+    obstacle2.move()
+    if obstacle2.x < - obstacle2.width:
+        score += 1
+        speed2 += increment ** 2
+        obstacle2 = Obstacle(speed2)
+
+    if player.mask().overlap(obstacle2.mask(), (int(round(obstacle2.x - player.x)), int(round(obstacle2.y - player.y)))):
         run = False
 
     draw_window()
